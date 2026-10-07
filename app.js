@@ -103,10 +103,10 @@ async function openBot(id) {
   const num = $('#dViewsNum');
   num.textContent = local.toLocaleString('tr-TR');
   try {
-    const r = await fetch(`https://api.counterapi.dev/v1/${COUNTER_NS}/bot-${encodeURIComponent(id)}/up`);
+    const r = await fetch(`https://abacus.jasoncameron.dev/hit/${COUNTER_NS}/bot-${encodeURIComponent(id)}`);
     if (!r.ok) throw new Error();
     const j = await r.json();
-    if (typeof j.count === 'number') num.textContent = j.count.toLocaleString('tr-TR');
+    if (typeof j.value === 'number') num.textContent = j.value.toLocaleString('tr-TR');
   } catch { /* offline: yerel sayaç yeterli */ }
 }
 
