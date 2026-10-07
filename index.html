@@ -5,25 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>RPAntoloji — RP Bot Keşif</title>
 <meta name="description" content="Rol yapma botları kategorilere ve etiketlere göre keşfet, favorile, içeriği kopyala veya JSON indir.">
-<meta name="theme-color" content="#070508">
+<meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&display=block" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e0a458' d='M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h3a4 4 0 0 1 4 4v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-1H3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1v-1a4 4 0 0 1 4-4h3V5.73A2 2 0 0 1 12 2zM9 11a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm6 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h3a4 4 0 0 1 4 4v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-1H3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1v-1a4 4 0 0 1 4-4h3V5.73A2 2 0 0 1 12 2zM9 11a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm6 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z'/%3E%3C/svg%3E">
 </head>
 <body>
 
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
-      <span class="material-symbols-rounded brand-icon">smart_toy</span>
       <span class="brand-name">RPAntoloji</span>
     </div>
-    <button id="btnAboutTop" class="icon-btn" aria-label="Nasıl kullanılır">
-      <span class="material-symbols-rounded">help</span>
-    </button>
+    <div class="topbar-actions">
+      <div class="genderseg" role="group" aria-label="Cinsiyet filtresi">
+        <button class="gbtn active" data-gender="all" aria-label="Tümü"><span class="material-symbols-rounded">groups</span></button>
+        <button class="gbtn" data-gender="female" aria-label="Kız"><span class="material-symbols-rounded">female</span></button>
+        <button class="gbtn" data-gender="male" aria-label="Erkek"><span class="material-symbols-rounded">male</span></button>
+      </div>
+      <button id="btnAboutTop" class="icon-btn" aria-label="Nasıl kullanılır">
+        <span class="material-symbols-rounded">help</span>
+      </button>
+    </div>
   </div>
   <div class="searchwrap">
     <span class="material-symbols-rounded search-icon">search</span>
@@ -118,6 +124,7 @@
 <div id="toast" class="toast hidden" role="status"></div>
 
 <nav class="tabbar">
+  <div class="tab-glider" aria-hidden="true"></div>
   <button class="tab active" data-tab="discover">
     <span class="material-symbols-rounded">explore</span><span>Keşfet</span>
   </button>

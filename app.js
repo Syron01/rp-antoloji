@@ -2,7 +2,7 @@
 
 /* ---------- State ---------- */
 let BOTS = [];
-let state = { tab: 'discover', cat: 'all', query: '', page: 1, detail: null };
+let state = { tab: 'discover', cat: 'all', query: '', gender: 'all', page: 1, detail: null };
 const PAGE_SIZE = 12;
 const FAV_KEY = 'rpantoloji.favs';
 const COUNT_KEY = 'rpantoloji.counts';
@@ -115,6 +115,7 @@ function filtered() {
   const q = state.query.trim().toLowerCase();
   return BOTS.filter((b) => {
     if (state.cat !== 'all' && b.category !== state.cat) return false;
+    if (state.gender !== 'all' && b.gender !== state.gender) return false;
     if (!q) return true;
     return (b.name + ' ' + b.description + ' ' + b.tags.join(' ') + ' ' + b.greeting)
       .toLowerCase().includes(q);
@@ -243,6 +244,16 @@ function closeDetail() {
 }
 
 /* ---------- Tabs ---------- */
+const TAB_ORDER = ['discover', 'categories', 'favorites', 'about'];
+
+function moveGlider() {
+  const bar = document.querySelector('.tabbar');
+  const glider = document.querySelector('.tab-glider');
+  if (!bar || !glider) return;
+  const idx = TAB_ORDER.indexOf(state.tab);
+  glider.style.transform = `translateX(${idx * 100}%)`;
+}
+
 function switchTab(tab) {
   state.tab = tab;
   document.querySelectorAll('.tab').forEach((t) =>
@@ -252,8 +263,30 @@ function switchTab(tab) {
   if (tab === 'favorites') renderFavorites();
   if (tab === 'categories') renderCategories();
   if (tab === 'discover') renderDiscover();
+  moveGlider();
   window.scrollTo({ top: 0 });
 }
+
+/* Parmakla kaydırma: yatay swipe ile sekme değiştir */
+(function initSwipe() {
+  let startX = 0, startY = 0, tracking = false;
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1 || !$('#detail').classList.contains('hidden')) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const idx = TAB_ORDER.indexOf(state.tab);
+    const next = dx < 0 ? idx + 1 : idx - 1;
+    if (next >= 0 && next < TAB_ORDER.length) switchTab(TAB_ORDER[next]);
+  }, { passive: true });
+})();
 
 /* ---------- Events ---------- */
 document.addEventListener('click', (e) => {
@@ -272,6 +305,16 @@ document.addEventListener('click', (e) => {
 
 document.querySelectorAll('.tab').forEach((t) =>
   t.addEventListener('click', () => switchTab(t.dataset.tab)));
+
+document.querySelectorAll('.gbtn').forEach((b) =>
+  b.addEventListener('click', () => {
+    state.gender = b.dataset.gender;
+    state.page = 1;
+    document.querySelectorAll('.gbtn').forEach((x) =>
+      x.classList.toggle('active', x === b));
+    if (state.tab === 'discover') renderDiscover();
+    else switchTab('discover');
+  }));
 
 $('#search').addEventListener('input', (e) => {
   state.query = e.target.value;
@@ -313,6 +356,7 @@ fetch('data/bots.json')
     BOTS = data;
     renderChips();
     renderDiscover();
+    moveGlider();
   })
   .catch(() => {
     $('#resultMeta').textContent = 'Veri yüklenemedi. Sayfayı yenilemeyi dene.';
