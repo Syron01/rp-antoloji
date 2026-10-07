@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RPAntoloji — RP Bot Keşif</title>
+<meta name="description" content="Rol yapma botları kategorilere ve etiketlere göre keşfet, favorile, içeriği kopyala veya JSON indir.">
+<meta name="theme-color" content="#0a0a0c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&display=block" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e0a458' d='M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h3a4 4 0 0 1 4 4v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-1H3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1v-1a4 4 0 0 1 4-4h3V5.73A2 2 0 0 1 12 2zM9 11a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm6 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="material-symbols-rounded brand-icon">smart_toy</span>
+      <span class="brand-name">RPAntoloji</span>
+    </div>
+    <button id="btnAboutTop" class="icon-btn" aria-label="Nasıl kullanılır">
+      <span class="material-symbols-rounded">help</span>
+    </button>
+  </div>
+  <div class="searchwrap">
+    <span class="material-symbols-rounded search-icon">search</span>
+    <input id="search" type="search" placeholder="Bot, etiket veya senaryo ara..." autocomplete="off">
+    <button id="clearSearch" class="icon-btn hidden" aria-label="Aramayı temizle">
+      <span class="material-symbols-rounded">close</span>
+    </button>
+  </div>
+  <div id="catChips" class="chips" role="tablist" aria-label="Kategoriler"></div>
+</header>
+
+<main id="views">
+
+  <section id="view-discover" class="view" aria-label="Keşfet">
+    <div id="resultMeta" class="result-meta"></div>
+    <div id="grid" class="grid"></div>
+    <button id="loadMore" class="ghost-btn hidden">
+      <span class="material-symbols-rounded">expand_more</span> Daha fazla göster
+    </button>
+  </section>
+
+  <section id="view-categories" class="view hidden" aria-label="Kategoriler"></section>
+
+  <section id="view-favorites" class="view hidden" aria-label="Favorilerim">
+    <div id="favMeta" class="result-meta"></div>
+    <div id="favGrid" class="grid"></div>
+    <div id="favEmpty" class="empty hidden">
+      <span class="material-symbols-rounded empty-icon">bookmark_border</span>
+      <p>Henüz favorin yok. Kartlardaki yer imi simgesiyle bot ekleyebilirsin.</p>
+    </div>
+  </section>
+
+  <section id="view-about" class="view hidden" aria-label="Nasıl kullanılır">
+    <div class="about">
+      <h2>Nasıl kullanılır?</h2>
+      <div class="about-step">
+        <span class="material-symbols-rounded">manage_search</span>
+        <div><b>Keşfet</b><p>Kategorilerden filtrele, arama yap, karta dokunarak botu aç.</p></div>
+      </div>
+      <div class="about-step">
+        <span class="material-symbols-rounded">bookmark</span>
+        <div><b>Favorilerim</b><p>Beğendiğin botları yer imine ekle; cihazında saklanır, hesap gerekmez.</p></div>
+      </div>
+      <div class="about-step">
+        <span class="material-symbols-rounded">content_copy</span>
+        <div><b>Kopyala</b><p>Bot detayındaki her alanın yanındaki kopyala simgesiyle o bölümü panoya al.</p></div>
+      </div>
+      <div class="about-step">
+        <span class="material-symbols-rounded">download</span>
+        <div><b>JSON indir</b><p>Botu tek tıkla JSON olarak indir veya tüm katalogu dışa aktar.</p></div>
+      </div>
+      <div class="about-step">
+        <span class="material-symbols-rounded">visibility</span>
+        <div><b>Görüntülenme</b><p>Bir botun detayına her girişte görüntülenme sayacı artar.</p></div>
+      </div>
+      <p class="about-note">Tüm bot içerikleri özgün ve Türkçe'dir. Bu site bağımsız bir RP kaynak kütüphanesidir.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- Bot detay paneli -->
+<div id="detail" class="detail hidden" role="dialog" aria-modal="true">
+  <div class="detail-sheet">
+    <div class="detail-head">
+      <button id="detailClose" class="icon-btn" aria-label="Kapat">
+        <span class="material-symbols-rounded">arrow_back</span>
+      </button>
+      <div class="detail-title">
+        <h2 id="dName"></h2>
+        <div id="dTags" class="d-tags"></div>
+      </div>
+      <button id="detailFav" class="icon-btn" aria-label="Favoriye ekle">
+        <span class="material-symbols-rounded">bookmark_border</span>
+      </button>
+    </div>
+    <div class="detail-actions">
+      <button id="btnCopyAll" class="chip-btn">
+        <span class="material-symbols-rounded">content_copy</span> Tümünü kopyala
+      </button>
+      <button id="btnDlJson" class="chip-btn">
+        <span class="material-symbols-rounded">download</span> JSON indir
+      </button>
+      <span class="views-pill" id="dViews">
+        <span class="material-symbols-rounded">visibility</span> <span id="dViewsNum">—</span>
+      </span>
+    </div>
+    <div id="dFields" class="fields"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden" role="status"></div>
+
+<nav class="tabbar">
+  <button class="tab active" data-tab="discover">
+    <span class="material-symbols-rounded">explore</span><span>Keşfet</span>
+  </button>
+  <button class="tab" data-tab="categories">
+    <span class="material-symbols-rounded">category</span><span>Kategoriler</span>
+  </button>
+  <button class="tab" data-tab="favorites">
+    <span class="material-symbols-rounded">bookmarks</span><span>Favoriler</span>
+  </button>
+  <button class="tab" data-tab="about">
+    <span class="material-symbols-rounded">info</span><span>Bilgi</span>
+  </button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
