@@ -3,7 +3,7 @@
 /* ---------- State ---------- */
 let BOTS = [];
 let state = { tab: 'discover', cat: 'all', query: '', page: 1, detail: null };
-const PAGE_SIZE = 24;
+const PAGE_SIZE = 12;
 const FAV_KEY = 'rpantoloji.favs';
 const COUNT_KEY = 'rpantoloji.counts';
 
@@ -143,9 +143,11 @@ function renderGrid(container, list, metaEl, metaText, paging) {
   const shown = paging ? list.slice(0, state.page * PAGE_SIZE) : list;
   container.innerHTML = '';
   const frag = document.createDocumentFragment();
+  let i=0;
   for (const b of shown) {
     const c = el('div', 'card', cardHtml(b));
     c.dataset.open = b.id;
+    c.style.animationDelay = `${(i++ % PAGE_SIZE) * 35}ms`;
     frag.appendChild(c);
   }
   container.appendChild(frag);
